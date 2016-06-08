@@ -1,10 +1,7 @@
 # usbong_none_d1s1
-+scaffold; improved version of usbong_sunshine scaffold; 
-
-+uses the latest UsbongKit (Android);
-
-+with improvements for None, i.e. app remembers set language; 
-
++scaffold; improved version of usbong_sunshine scaffold;<br>
++uses the latest UsbongKit (Android);<br>
++with improvements for None, i.e. app remembers set language;<br>
 +does not include actual content (i.e .utree file)
 
 # Official Company Website
