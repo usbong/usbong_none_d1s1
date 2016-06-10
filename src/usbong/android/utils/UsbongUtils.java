@@ -167,8 +167,8 @@ public class UsbongUtils {
 	
 	public static String myTreeFileName="";
 	
-	public static String usbongDefaultLanguage="English"; //default is English
-	public static String usbongSetLanguage=usbongDefaultLanguage; //default is English
+	public static String usbongDefaultLanguage="Filipino"; //default is Filipino
+	public static String usbongSetLanguage=usbongDefaultLanguage; //default is Filipino
 	private static String currLanguage=usbongDefaultLanguage;
 	private static String usbongDefaultLanguageOfXML=usbongDefaultLanguage; //added by Mike, 20160608
 	
