@@ -295,17 +295,19 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
         SharedPreferences prefs = getSharedPreferences(UsbongConstants.MY_SAVED_LANGUAGE_SETTING, MODE_PRIVATE);
         if (prefs!=null) {
 		  //@todo: remove this id thing, immediately use the String; otherwise it'll be cumbersome to keep on adding language ids
-		  currLanguageBeingUsed=prefs.getInt("preferredLanguage", 0);
+		  currLanguageBeingUsed=prefs.getInt("preferredLanguage", UsbongUtils.getLanguageID(UsbongUtils.getCurrLanguage())); //default is Filipino
 /* //commented out by Mike, 20160608
  * //default language will be set based on the default language set in the .xml of the .utree file
  * 		  UsbongUtils.setDefaultLanguage(UsbongUtils.getLanguageBasedOnID(currLanguageBeingUsed));
  */
-		  UsbongUtils.setCurrLanguage(UsbongUtils.getLanguageBasedOnID(prefs.getInt("preferredLanguage", 0))); //updated by Mike, 20160608
+		  UsbongUtils.setCurrLanguage(UsbongUtils.getLanguageBasedOnID(currLanguageBeingUsed));//prefs.getInt("preferredLanguage", 0))); //updated by Mike, 20160612
       	}
       	else {
           //default..
-          currLanguageBeingUsed=UsbongUtils.getLanguageID(UsbongUtils.getCurrLanguage());        
-        }
+          currLanguageBeingUsed=UsbongUtils.getLanguageID(UsbongUtils.getCurrLanguage());
+		  //UsbongUtils.setCurrLanguage(UsbongUtils.getLanguageBasedOnID(currLanguageBeingUsed)); //updated by Mike, 20160612
+      	}
+        
         //added by Mike, 20160608
         currSelectedItemForSetLanguage = currLanguageBeingUsed;
         
@@ -702,7 +704,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 				}
 			}
 		}
-		
+				
 		//20160420				
 		// Unlock Languages button
 		setLanguageDialog.setPositiveButton("Unlock Languages",
@@ -719,6 +721,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 		                dialog.dismiss();
 		            }
 		        });
+		Log.d(">>>>>","currSelectedItemForSetLanguage: "+currSelectedItemForSetLanguage);
 		setLanguageDialog.setSingleChoiceItems(arrayAdapter,currSelectedItemForSetLanguage,//setAdapter(arrayAdapter,
 		        new DialogInterface.OnClickListener() {
 		            public void onClick(DialogInterface dialog, int which) {
