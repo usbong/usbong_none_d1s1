@@ -2864,6 +2864,32 @@ public class UsbongUtils {
     	return myPrompts;
     }
 
+    //added by Mike, 20150616
+    public static String[] initProcessReturnToTitleScreenActivity() {
+		String[] myPrompts = new String[4];
+    	    	
+    	if (getLanguageID(currLanguage)==LANGUAGE_FILIPINO) {
+    		myPrompts[MY_PROMPT_TITLE] = ((String) UsbongDecisionTreeEngineActivity.getInstance().getResources().getText(R.string.alertStringValueFilipino));
+    		myPrompts[MY_PROMPT_MESSAGE] = ((String) UsbongDecisionTreeEngineActivity.getInstance().getResources().getText(R.string.areYouSureYouWantToReturnToTitleScreenFilipino));
+    		myPrompts[MY_PROMPT_POSITIVE_BUTTON_TEXT] = (String) UsbongDecisionTreeEngineActivity.getInstance().getResources().getText(R.string.yesStringValueFilipino);
+    		myPrompts[MY_PROMPT_NEGATIVE_BUTTON_TEXT] = (String) UsbongDecisionTreeEngineActivity.getInstance().getResources().getText(R.string.noStringValueFilipino);  
+    	}
+    	else if (getLanguageID(currLanguage)==LANGUAGE_JAPANESE) {
+    		myPrompts[MY_PROMPT_TITLE] = ((String) UsbongDecisionTreeEngineActivity.getInstance().getResources().getText(R.string.alertStringValueJapanese));				    						    		
+    		myPrompts[MY_PROMPT_MESSAGE] = ((String) UsbongDecisionTreeEngineActivity.getInstance().getResources().getText(R.string.areYouSureYouWantToReturnToTitleScreenJapanese));
+    		myPrompts[MY_PROMPT_POSITIVE_BUTTON_TEXT] = (String) UsbongDecisionTreeEngineActivity.getInstance().getResources().getText(R.string.yesStringValueJapanese);
+    		myPrompts[MY_PROMPT_NEGATIVE_BUTTON_TEXT] = (String) UsbongDecisionTreeEngineActivity.getInstance().getResources().getText(R.string.noStringValueJapanese);  
+    	}
+    	else { //if (currLanguageBeingUsed==UsbongUtils.LANGUAGE_ENGLISH) {
+    		myPrompts[MY_PROMPT_TITLE] = ((String) UsbongDecisionTreeEngineActivity.getInstance().getResources().getText(R.string.alertStringValueEnglish));				    						    		        	    		
+    		myPrompts[MY_PROMPT_MESSAGE] = ((String) UsbongDecisionTreeEngineActivity.getInstance().getResources().getText(R.string.areYouSureYouWantToReturnToTitleScreenEnglish));
+    		myPrompts[MY_PROMPT_POSITIVE_BUTTON_TEXT] = (String) UsbongDecisionTreeEngineActivity.getInstance().getResources().getText(R.string.yesStringValueEnglish);
+    		myPrompts[MY_PROMPT_NEGATIVE_BUTTON_TEXT] = (String) UsbongDecisionTreeEngineActivity.getInstance().getResources().getText(R.string.noStringValueEnglish);  
+    	}
+    	
+    	return myPrompts;
+    }
+    
     //added by Mike, 20160414
     //this is like getAvailableTranslationsArrayList(String treeFile)
 	public static ArrayList<String> getAvailableHintsArrayList(String treeFile)

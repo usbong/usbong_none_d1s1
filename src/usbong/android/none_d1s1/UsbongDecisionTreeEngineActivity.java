@@ -313,10 +313,12 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
         
         //==================================================================
         //text-to-speech stuff
+/*//comment out, not needed in DAHON, 
+ * commented out by Mike, 20160613
         Intent checkIntent = new Intent();
         checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
         startActivityForResult(checkIntent, UsbongUtils.MY_DATA_CHECK_CODE);
-
+*/
         mTts = new TextToSpeech(this,this);
 		mTts.setLanguage(new Locale("en", "US"));//default
         //==================================================================
@@ -324,7 +326,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 		myMediaPlayer = new MediaPlayer();
 		myMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC); //added by Mike, 22 July 2015
 		myMediaPlayer.setVolume(1.0f, 1.0f);
-
+		
 		//added by Mike, 25 Sept. 2015
 		myBGMediaPlayer = new MediaPlayer();
 		myBGMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -958,7 +960,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 				}).show();
 				return true;
 			case android.R.id.home: //added by Mike, 22 Sept. 2015
-	        	processReturnToMainMenuActivity();
+	        	processReturnToTitleScreenActivity();
 		        return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -1417,7 +1419,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
     public boolean onKeyDown(int keyCode, KeyEvent event) {
     	if (getParent()!=null) { 
 	        if (keyCode == KeyEvent.KEYCODE_BACK) {
-	        	processReturnToMainMenuActivity();
+	        	processReturnToTitleScreenActivity();
 	        	return false;
 	        }
     	}
@@ -1428,7 +1430,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
     //added by Mike, Feb. 2, 2013
     @Override
 	public void onBackPressed() {
-    	processReturnToMainMenuActivity();    
+    	processReturnToTitleScreenActivity();    
     }
     
     @Override
@@ -2142,7 +2144,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
             	currUsbongNode=(String)usbongNodeContainer.elementAt(usbongNodeContainerCounter);
             }
             else { 
-            	processReturnToMainMenuActivity();
+            	processReturnToTitleScreenActivity();
 /*                	initParser();
                 	return;
 */
@@ -3117,8 +3119,8 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
     }
 
     //edited by Mike, 20160417
-    private void processReturnToMainMenuActivity() {
-		String[] myPrompts = UsbongUtils.initProcessReturnToMainMenuActivity();
+    private void processReturnToTitleScreenActivity() {
+		String[] myPrompts = UsbongUtils.initProcessReturnToTitleScreenActivity();
 		    		
     	//added by Mike, Feb. 2, 2013;
 		//edited by Mike, 20151120
@@ -3128,7 +3130,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 		prompt.setPositiveButton(myPrompts[UsbongUtils.MY_PROMPT_POSITIVE_BUTTON_TEXT], new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				processReturnToMainMenuActivityYes();
+				processReturnToTitleScreenActivityYes();
 			}
 		});
 		prompt.setNegativeButton(myPrompts[UsbongUtils.MY_PROMPT_NEGATIVE_BUTTON_TEXT], new DialogInterface.OnClickListener() {
@@ -3139,8 +3141,13 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 		prompt.show();		
     }
     
-    //added by Mike, 20160417
+    //added by Mike, 20160616
     private void processReturnToMainMenuActivityYes() {
+    	processReturnToTitleScreenActivityYes();
+    }
+    
+    //added by Mike, 20160417
+    private void processReturnToTitleScreenActivityYes() {
 		decisionTrackerContainer.removeAllElements();
 
 		Log.d(">>>>UsbongUtils.STORE_OUTPUT",""+UsbongUtils.STORE_OUTPUT);
