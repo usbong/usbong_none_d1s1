@@ -168,7 +168,7 @@ public class UsbongUtils {
 	public static String myTreeFileName="";
 	
 	public static String usbongDefaultLanguage="Filipino"; //default is Filipino
-	public static String usbongSetLanguage=usbongDefaultLanguage; //default is Filipino
+//	public static String usbongSetLanguage=usbongDefaultLanguage; //default is Filipino
 	private static String currLanguage=usbongDefaultLanguage;
 	private static String usbongDefaultLanguageOfXML=usbongDefaultLanguage; //added by Mike, 20160608
 	
@@ -1413,22 +1413,22 @@ public class UsbongUtils {
 	    	else if (s.equals("Mandarin")) {
 	    		return LANGUAGE_MANDARIN;
 	    	}
-	    	if (s.equals("Bisaya")) {
+	    	else if (s.equals("Bisaya")) {
 	    		return LANGUAGE_BISAYA;
 	    	}
-	    	if (s.equals("Ilonggo")) {
+	    	else if (s.equals("Ilonggo")) {
 	    		return LANGUAGE_ILONGGO;
 	    	}
-	    	if (s.equals("Kapampangan")) {
+	    	else if (s.equals("Kapampangan")) {
 	    		return LANGUAGE_KAPAMPANGAN;
 	    	}
-	    	if (s.equals("French")) {
+	    	else if (s.equals("French")) {
 	    		return LANGUAGE_FRENCH;
 	    	}
-	    	if (s.equals("Spanish")) {
+	    	else if (s.equals("Spanish")) {
 	    		return LANGUAGE_SPANISH;
 	    	}
-	    	if (s.equals("Korean")) {
+	    	else if (s.equals("Korean")) {
 	    		return LANGUAGE_KOREAN;
 	    	}
     	}
@@ -1465,7 +1465,9 @@ public class UsbongUtils {
     }
     
     public static String getSetLanguage() {
-    	return usbongSetLanguage;
+    	//edited by Mike, 20160618
+//    	return usbongSetLanguage;
+    	return currLanguage;    		
     }
 
     //added by Mike, 20160608
@@ -1475,11 +1477,16 @@ public class UsbongUtils {
 
     public static void setDefaultLanguage(String s) {
     	usbongDefaultLanguage = s;
-    	usbongSetLanguage = usbongDefaultLanguage;
+    	
+    	//edited by Mike, 20160618
+    	//usbongSetLanguage = usbongDefaultLanguage;
+    	currLanguage = usbongDefaultLanguage;
     }
     
     public static void setLanguage(String s) {
-    	usbongSetLanguage = s;
+    	//edited by Mike, 20160618
+    	//usbongSetLanguage = s;
+    	currLanguage = s;
     }
 
     //added by Mike, 20160608
