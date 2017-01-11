@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+import usbong.android.utils.AppRater;
 import usbong.android.utils.UsbongConstants;
 import usbong.android.utils.UsbongUtils;
 import android.app.Activity;
@@ -84,7 +85,17 @@ public class UsbongMainActivity extends AppCompatActivity/*Activity*/
 	        setContentView(R.layout.main);	        
 	        instance = this;
 //	    	startTime = new Date();
-	    	
+
+            //added by Mike, 20161117
+            Bundle extras = getIntent().getExtras();
+            if (extras!=null) {
+                String message = extras.getString("completed_tree");
+
+                if (message.equals("true")) {
+                    AppRater.showRateDialog(this); 
+                }                    
+            }
+            
 	        reset();
 	        initMainMenuScreen();
     }
