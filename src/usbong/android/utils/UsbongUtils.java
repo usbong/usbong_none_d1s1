@@ -2107,58 +2107,84 @@ public class UsbongUtils {
 */
 	    	StringBuffer temp = new StringBuffer();
 	    	while (sc.hasNext()) {
-	    		temp.append(sc.next()+" ");
+    			temp.append(sc.next()+" ");
 
-	    		Log.d(">>>temp: ",temp.toString());
+    			//added by Mike, 20160123
+	    		String startsWith = "";
+	    		String endsWith = "";
 	    		
-	    		if (temp.toString().startsWith("<a")) {
+	    		if (temp.toString().startsWith("<a")) { //doesn't use the startsWith String
 	    			while (sc.hasNext()&&!temp.toString().trim().endsWith("</a>")) {
 	    				temp.append(sc.next()+" ");
 	    			}
 	    		}	    		
 	    		else if (temp.toString().startsWith("<small>")) {
-	    			while (sc.hasNext()&&!temp.toString().trim().endsWith("</small>")) {
-	    				temp.append(sc.next()+" ");
-	    			}
+	    			startsWith="<small>"; //added by Mike, 20160123
 	    		}	    		
 	    		else if (temp.toString().startsWith("<big>")) {
-	    			while (sc.hasNext()&&!temp.toString().trim().endsWith("</big>")) {
-	    				temp.append(sc.next()+" ");
-	    			}
+	    			startsWith="<big>"; //added by Mike, 20160123
 	    		}	    		
 	    		else if (temp.toString().startsWith("<font>")) {
-	    			while (sc.hasNext()&&!temp.toString().trim().endsWith("</font>")) {
-	    				temp.append(sc.next()+" ");
-	    			}
+	    			startsWith="<font>"; //added by Mike, 20160123
 	    		}	    		
 	    		else if (temp.toString().startsWith("<b>")) {
-//	    			Log.d(">>nasa loob","<b>");
-	    			while (sc.hasNext()&&!temp.toString().trim().endsWith("</b>")) {
-//	    			while (sc.hasNext()&&!temp.toString().trim().contains("</b>")) {
-	    				temp.append(sc.next()+" ");
-	    			}
+	    			startsWith="<b>"; //added by Mike, 20160123
 	    		}	    		
 	    		else if (temp.toString().startsWith("<i>")) {
-	    			while (sc.hasNext()&&!temp.toString().trim().endsWith("</i>")) {
-//	    			while (sc.hasNext()&&!temp.toString().trim().contains("</i>")) {
-	    				temp.append(sc.next()+" ");
-	    			}
+	    			startsWith="<i>"; //added by Mike, 20160123
 	    		}	    		
 	    		else if (temp.toString().startsWith("<u>")) {
-	    			while (sc.hasNext()&&!temp.toString().trim().endsWith("</u>")) {
-	    				temp.append(sc.next()+" ");
-	    			}
-	    		}	    		
+	    			startsWith="<u>"; //added by Mike, 20160123
+	    		}	   
+	    		
+	    		endsWith = startsWith.replace("<", "</");
 	    		
 //	    		tokenizedStringList.add(temp.toString()+" "); //commented out by Mike, 19 Sept. 2015
-	    		tokenizedStringList.add(temp.toString());
+	    		if (!startsWith.equals("")) {
+		    		tokenizedStringList.add(startsWith);	    				    			
+	    		}
+	    		
+	    		tokenizedStringList.add(temp.toString().replace(startsWith,"").replace(endsWith, ""));
 	    		temp.delete(0, temp.length());//reset
-	    	}		    	    	
+
+	    		if (!startsWith.equals("")) {
+		    		tokenizedStringList.add(endsWith);	    				    			
+	    		}
+	    	}		        	    	
 	    }
     	
     	for(int i=0; i<tokenizedStringList.size(); i++) {				  
-    		Log.d(">>",""+tokenizedStringList.get(i));    	
-    	}
+    		Log.d(">>",""+tokenizedStringList.get(i));   
+    		
+    		//added by Mike, 20160123
+    		if (tokenizedStringList.get(i).contains("<br>")) {
+        		Pattern pattern = Pattern.compile(Pattern.quote("<br>"));            
+        		String[] myTokenList = pattern.split(tokenizedStringList.get(i));
+    	  		String myStringToken = "";
+    	  		tokenizedStringList.remove(i);
+    	  		
+    	  		int counter = i;
+    	  		for (int k=0; k<myTokenList.length; k++) {
+    	  			 myStringToken = myTokenList[k]; 	
+    	  			 
+    	  			 if (myStringToken.trim().equals("")) {	  				 
+	    	  			 tokenizedStringList.add(counter,"<br>");
+		  				 counter++;
+    	  			 }
+    	  			 else if (!myStringToken.trim().equals("")) {	  				 
+    	  				 tokenizedStringList.add(counter,myStringToken);
+    	  				 counter++;
+    	  				 
+    	  				 if (k!=myTokenList.length-1) { //no need to add <br> if this is already the last token
+	    	  				 tokenizedStringList.add(counter,"<br>");
+	    	  				 counter++;
+    	  				 }
+    	  			 }    	  			 
+    	  		}
+    	  		i = counter;	  		
+    			
+    		}    		
+    	}	    
 
 		try {
 		  boolean foundMatch=false;
