@@ -110,6 +110,7 @@ public class UsbongUtils {
 	public static boolean IS_IN_AUTO_NARRATE_MODE=true;
 	public static boolean IS_IN_AUTO_PLAY_MODE=false;
 	public static boolean IS_IN_AUTO_LOOP_MODE=false;
+	public static boolean IS_IN_HINTS_MODE=true; //added by Mike, 2070307
 	
 	public static boolean hasUnlockedAllLanguages=true;
 
@@ -408,6 +409,10 @@ public class UsbongUtils {
 	    		UsbongUtils.IS_IN_AUTO_LOOP_MODE=false;						
 			    out.println("IS_IN_AUTO_LOOP_MODE=OFF");
 
+			    //added by Mike, 20170307
+	    		UsbongUtils.IS_IN_HINTS_MODE=false;						
+			    out.println("IS_IN_HINTS_MODE=OFF");
+			    
 				out.close();
     		}
     		else {
@@ -431,6 +436,10 @@ public class UsbongUtils {
 					}
 	    			else if (currLineString.equals("IS_IN_AUTO_LOOP_MODE=ON")) {
 						UsbongUtils.IS_IN_AUTO_LOOP_MODE=true;			
+					}
+	    			//added by Mike, 20170307
+	    			else if (currLineString.equals("IS_IN_HINTS_MODE=ON")) {
+						UsbongUtils.IS_IN_HINTS_MODE=true;			
 					}
 	    			/*
 	    			else {
@@ -1989,7 +1998,32 @@ public class UsbongUtils {
     	return styledText; //do "Html.fromHtml(styledText);" later
     }
 
-	//added by Mike, Sept. 27, 2012
+	//added by Mike, 2070307
+	//answer from Chistopher, stackoverflow
+	//Reference: http://stackoverflow.com/questions/2730706/highlighting-text-color-using-html-fromhtml-in-android;
+	//last accessed: 19 Sept. 2012
+    public static View applyTagsInAlertStringView(Activity a, View myView, int type, String myCurrUsbongNode) {
+    	String styledText = applyTagsInString(a, myCurrUsbongNode);    	    	
+
+		switch(type) {
+			case IS_RADIOBUTTON:
+				((RadioButton)myView).setText(Html.fromHtml(styledText));
+				makeLinksFocusable(((RadioButton)myView), IS_RADIOBUTTON);
+				break;
+			case IS_CHECKBOX:
+				((CheckBox)myView).setText(Html.fromHtml(styledText));					
+				makeLinksFocusable(((CheckBox)myView), IS_CHECKBOX);
+				break;				
+			default: //case IS_TEXTVIEW:
+				((TextView)myView).setText(Html.fromHtml(styledText));					
+				makeLinksFocusable(((TextView)myView), IS_TEXTVIEW);
+				break;
+		}
+
+		return myView;
+    }
+    
+    //added by Mike, Sept. 27, 2012
 	//answer from Chistopher, stackoverflow
 	//Reference: http://stackoverflow.com/questions/2730706/highlighting-text-color-using-html-fromhtml-in-android;
 	//last accessed: 19 Sept. 2012
@@ -2034,6 +2068,11 @@ public class UsbongUtils {
     public static View applyHintsInView(Activity a, View myView, int type) {    	    	
     	Log.d(">>>>", "getCurrLanguage(): "+getCurrLanguage());
 
+    	//added by Mike, 2070307
+    	if (!IS_IN_HINTS_MODE) {
+    		return myView;
+    	}
+    	
     	if((myHashtableOfWordHints==null) || (!myHashtableOfWordHints.containsKey(getCurrLanguage()))) {						
 		    switch(type) {
 				case IS_RADIOBUTTON:

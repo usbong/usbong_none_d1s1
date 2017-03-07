@@ -794,7 +794,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 				//20160417
 				//Reference: http://stackoverflow.com/questions/16954196/alertdialog-with-checkbox-in-android;
 				//last accessed: 20160408; answer by: kamal; edited by: Empty2K12
-				final CharSequence[] items = {UsbongConstants.AUTO_NARRATE_STRING, UsbongConstants.AUTO_PLAY_STRING, UsbongConstants.AUTO_LOOP_STRING};
+				final CharSequence[] items = {UsbongConstants.AUTO_NARRATE_STRING, UsbongConstants.AUTO_PLAY_STRING, UsbongConstants.AUTO_LOOP_STRING, UsbongConstants.HINTS_STRING}; //updated by Mike, 2070307
 				// arraylist to keep the selected items
 				selectedSettingsItems=new ArrayList<Integer>();
 				
@@ -809,7 +809,11 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 				if (UsbongUtils.IS_IN_AUTO_LOOP_MODE) {					
 					selectedSettingsItems.add(UsbongConstants.AUTO_LOOP);			
 				}
-			    
+				//added by Mike, 20170307
+				if (UsbongUtils.IS_IN_HINTS_MODE) {					
+					selectedSettingsItems.add(UsbongConstants.HINTS);			
+				}			    
+				
 			    selectedSettingsItemsInBoolean = new boolean[items.length];
 			    for(int k=0; k<items.length; k++) {
 		    		selectedSettingsItemsInBoolean[k] = false;			    		
@@ -869,7 +873,8 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 				 	    		Log.d(">>>", "currLineString: "+currLineString);
 								if ((currLineString.contains("IS_IN_AUTO_NARRATE_MODE="))
 								|| (currLineString.contains("IS_IN_AUTO_PLAY_MODE="))
-								|| (currLineString.contains("IS_IN_AUTO_LOOP_MODE="))) {
+								|| (currLineString.contains("IS_IN_AUTO_LOOP_MODE="))
+								|| (currLineString.contains("IS_IN_HINTS_MODE="))) {
 									continue;
 								}	
 								else {
@@ -899,6 +904,10 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 							    		out.println("IS_IN_AUTO_LOOP_MODE=ON");
 							    		UsbongUtils.IS_IN_AUTO_LOOP_MODE=true;						
 									}
+									else if (i==UsbongConstants.HINTS) {
+							    		out.println("IS_HINTS_ON=ON");
+							    		UsbongUtils.IS_IN_HINTS_MODE=true;						
+									}
 								}
 								else {
 									if (i==UsbongConstants.AUTO_NARRATE) {
@@ -912,6 +921,10 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 									else if (i==UsbongConstants.AUTO_LOOP) {
 							    		out.println("IS_IN_AUTO_LOOP_MODE=OFF");
 							    		UsbongUtils.IS_IN_AUTO_LOOP_MODE=false;	
+									}
+									else if (i==UsbongConstants.HINTS) {
+							    		out.println("IS_IN_HINTS_MODE=OFF");
+							    		UsbongUtils.IS_IN_HINTS_MODE=false;	
 									}
 								}				
 							}					
@@ -932,6 +945,9 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 				 	    	out2.close();
 				 	    	
 				 	    	UsbongUtils.deleteRecursive(new File(UsbongUtils.BASE_FILE_PATH + "usbong.config"+"TEMP"));
+				 	    					 	    	
+				 	    	//added by Mike, 2070307
+				 	    	initParser();
 				 		}
 				 		catch(Exception e) {
 				 			e.printStackTrace();
@@ -3285,7 +3301,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
     		alertString = (String) getResources().getText(R.string.alertStringValueEnglish);
         }
     	
-    	TextView requiredFieldAlertStringTextView = (TextView) UsbongUtils.applyTagsInView(UsbongDecisionTreeEngineActivity.getInstance(), new TextView(UsbongDecisionTreeEngineActivity.getInstance()), UsbongUtils.IS_TEXTVIEW, requiredFieldAlertString);
+    	TextView requiredFieldAlertStringTextView = (TextView) UsbongUtils.applyTagsInAlertStringView(UsbongDecisionTreeEngineActivity.getInstance(), new TextView(UsbongDecisionTreeEngineActivity.getInstance()), UsbongUtils.IS_TEXTVIEW, requiredFieldAlertString);
     	TextView alertStringTextView = (TextView) UsbongUtils.applyTagsInView(UsbongDecisionTreeEngineActivity.getInstance(), new TextView(UsbongDecisionTreeEngineActivity.getInstance()), UsbongUtils.IS_TEXTVIEW, alertString);
     	
     	new AlertDialog.Builder(UsbongDecisionTreeEngineActivity.this).setTitle(alertStringTextView.getText().toString())
