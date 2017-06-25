@@ -44,7 +44,6 @@ import usbong.android.utils.UsbongConstants;
 import usbong.android.utils.UsbongScreenProcessor;
 import usbong.android.utils.UsbongUtils;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -84,7 +83,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -316,7 +314,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
  */       
         //==================================================================
         //text-to-speech stuff
-/*//comment out, not needed in DAHON, 
+        /*//comment out, not needed in DAHON, 
  * commented out by Mike, 20160613
         Intent checkIntent = new Intent();
         checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
@@ -329,7 +327,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 		myMediaPlayer = new MediaPlayer();
 		myMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC); //added by Mike, 22 July 2015
 		myMediaPlayer.setVolume(1.0f, 1.0f);
-		
+
 		//added by Mike, 25 Sept. 2015
 		myBGMediaPlayer = new MediaPlayer();
 		myBGMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -412,6 +410,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 			protected Boolean doInBackground(String... params) {
 			    try {
 			    	UsbongUtils.initInAppBillingService(getInstance());
+			    	UsbongUtils.initInAppBillingService(getInstance()); //need to call this twice to get the updated languageBundleList
 			    }
 			    catch (Exception e) {
 			    	e.printStackTrace();
@@ -667,7 +666,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 //        myTransArrayList.add(0, UsbongUtils.getDefaultLanguage());
         myTransArrayList.add(0, UsbongUtils.getDefaultLanguageOfXML()); //edited by Mike, 20160608
         final int myTransArrayListSize = myTransArrayList.size();
-        
+
         //added by Mike, 20160618
         currSelectedItemForSetLanguage = UsbongUtils.getLanguageID(UsbongUtils.getDefaultLanguage());
 		for (int i = 0; i < myTransArrayListSize; i++) {
@@ -794,7 +793,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 				//20160417
 				//Reference: http://stackoverflow.com/questions/16954196/alertdialog-with-checkbox-in-android;
 				//last accessed: 20160408; answer by: kamal; edited by: Empty2K12
-				final CharSequence[] items = {UsbongConstants.AUTO_NARRATE_STRING, UsbongConstants.AUTO_PLAY_STRING, UsbongConstants.AUTO_LOOP_STRING, UsbongConstants.HINTS_STRING}; //updated by Mike, 2070307
+				final CharSequence[] items = {UsbongConstants.AUTO_NARRATE_STRING, UsbongConstants.AUTO_PLAY_STRING, UsbongConstants.AUTO_LOOP_STRING};
 				// arraylist to keep the selected items
 				selectedSettingsItems=new ArrayList<Integer>();
 				
@@ -809,11 +808,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 				if (UsbongUtils.IS_IN_AUTO_LOOP_MODE) {					
 					selectedSettingsItems.add(UsbongConstants.AUTO_LOOP);			
 				}
-				//added by Mike, 20170307
-				if (UsbongUtils.IS_IN_HINTS_MODE) {					
-					selectedSettingsItems.add(UsbongConstants.HINTS);			
-				}			    
-				
+			    
 			    selectedSettingsItemsInBoolean = new boolean[items.length];
 			    for(int k=0; k<items.length; k++) {
 		    		selectedSettingsItemsInBoolean[k] = false;			    		
@@ -873,8 +868,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 				 	    		Log.d(">>>", "currLineString: "+currLineString);
 								if ((currLineString.contains("IS_IN_AUTO_NARRATE_MODE="))
 								|| (currLineString.contains("IS_IN_AUTO_PLAY_MODE="))
-								|| (currLineString.contains("IS_IN_AUTO_LOOP_MODE="))
-								|| (currLineString.contains("IS_IN_HINTS_MODE="))) {
+								|| (currLineString.contains("IS_IN_AUTO_LOOP_MODE="))) {
 									continue;
 								}	
 								else {
@@ -904,10 +898,6 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 							    		out.println("IS_IN_AUTO_LOOP_MODE=ON");
 							    		UsbongUtils.IS_IN_AUTO_LOOP_MODE=true;						
 									}
-									else if (i==UsbongConstants.HINTS) {
-							    		out.println("IS_HINTS_ON=ON");
-							    		UsbongUtils.IS_IN_HINTS_MODE=true;						
-									}
 								}
 								else {
 									if (i==UsbongConstants.AUTO_NARRATE) {
@@ -921,10 +911,6 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 									else if (i==UsbongConstants.AUTO_LOOP) {
 							    		out.println("IS_IN_AUTO_LOOP_MODE=OFF");
 							    		UsbongUtils.IS_IN_AUTO_LOOP_MODE=false;	
-									}
-									else if (i==UsbongConstants.HINTS) {
-							    		out.println("IS_IN_HINTS_MODE=OFF");
-							    		UsbongUtils.IS_IN_HINTS_MODE=false;	
 									}
 								}				
 							}					
@@ -945,9 +931,6 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 				 	    	out2.close();
 				 	    	
 				 	    	UsbongUtils.deleteRecursive(new File(UsbongUtils.BASE_FILE_PATH + "usbong.config"+"TEMP"));
-				 	    					 	    	
-				 	    	//added by Mike, 2070307
-				 	    	initParser();
 				 		}
 				 		catch(Exception e) {
 				 			e.printStackTrace();
@@ -2273,7 +2256,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
     			initParser(myTree);
     			return;
     		}
-    		else {
+            else {        
                 //return to main activity
                 finish();
                 //added by Mike, 20161118
@@ -2281,7 +2264,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
                 toUsbongMainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
                 toUsbongMainActivityIntent.putExtra("completed_tree","true");
                 startActivity(toUsbongMainActivityIntent);
-    		}
+            }
     	}
     	else {			
     		if (currScreen==UsbongConstants.YES_NO_DECISION_SCREEN) {
@@ -2505,7 +2488,9 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
     			initParser();
     		}	
     		else if (currScreen==UsbongConstants.MULTIPLE_RADIO_BUTTONS_SCREEN) {
+/*	//removed by Mike, 20170625
 				currUsbongNode = nextUsbongNodeIfYes; //nextUsbongNodeIfNo will also do, since this is "Any"
+*/
     			RadioGroup myRadioGroup = (RadioGroup)findViewById(R.id.multiple_radio_buttons_radiogroup);				        				        		    			
 
 //		    			if (UsbongUtils.IS_IN_DEBUG_MODE==false) {
@@ -2545,12 +2530,14 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 */		    			
     		}
     		else if (currScreen==UsbongConstants.MULTIPLE_RADIO_BUTTONS_WITH_ANSWER_SCREEN) {
+/*	//removed by Mike, 20170625
 				currUsbongNode = nextUsbongNodeIfYes; //nextUsbongNodeIfNo will also do, since this is "Any"
+*/
     			RadioGroup myRadioGroup = (RadioGroup)findViewById(R.id.multiple_radio_buttons_radiogroup);				        				        		    			
 
 /*		    			if (UsbongUtils.IS_IN_DEBUG_MODE==false) {
  */
-	    			if (myRadioGroup.getCheckedRadioButtonId()==-1) { //no radio button checked			    							    				
+	    			if (myRadioGroup.getCheckedRadioButtonId()==-1) { //no radio button checked
 		        		if (!UsbongUtils.IS_IN_DEBUG_MODE) {
 		        			if (!isAnOptionalNode) {
 			    				showRequiredFieldAlert(PLEASE_CHOOSE_AN_ANSWER_ALERT_TYPE);
@@ -2632,7 +2619,9 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
     		else if ((currScreen==UsbongConstants.TEXTFIELD_SCREEN) 
     				|| (currScreen==UsbongConstants.TEXTFIELD_WITH_UNIT_SCREEN)
     				|| (currScreen==UsbongConstants.TEXTFIELD_NUMERICAL_SCREEN)) {
-    			currUsbongNode = nextUsbongNodeIfYes; //= nextIMCIQuestionIfNo will also do
+/*	//removed by Mike, 20170625
+				currUsbongNode = nextUsbongNodeIfYes; //= nextIMCIQuestionIfNo will also do
+*/
 		        EditText myTextFieldScreenEditText = (EditText)findViewById(R.id.textfield_edittext);
 
 //				        if (UsbongUtils.IS_IN_DEBUG_MODE==false) {
@@ -2664,7 +2653,9 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 					}
     		}
     		else if (currScreen==UsbongConstants.TEXTFIELD_WITH_ANSWER_SCREEN) {
-    			currUsbongNode = nextUsbongNodeIfYes; 
+/*	//removed by Mike, 20170625
+				currUsbongNode = nextUsbongNodeIfYes;
+*/
 		        EditText myTextFieldScreenEditText = (EditText)findViewById(R.id.textfield_edittext);
 			        //if it's blank
 	    			if (myTextFieldScreenEditText.getText().toString().trim().equals("")) {
@@ -2719,7 +2710,9 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 					}
     		}
     		else if ((currScreen==UsbongConstants.TEXTAREA_SCREEN)) {
-    			currUsbongNode = nextUsbongNodeIfYes; //= nextIMCIQuestionIfNo will also do
+/*	//removed by Mike, 20170625
+				currUsbongNode = nextUsbongNodeIfYes; //nextUsbongNodeIfNo will also do, since this is "Any"
+*/
 		        EditText myTextAreaScreenEditText = (EditText)findViewById(R.id.textarea_edittext);
 
 //				        if (UsbongUtils.IS_IN_DEBUG_MODE==false) {
@@ -2750,7 +2743,9 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 					}
     		}
     		else if (currScreen==UsbongConstants.TEXTAREA_WITH_ANSWER_SCREEN) {
-    			currUsbongNode = nextUsbongNodeIfYes; 
+/*	//removed by Mike, 20170625
+				currUsbongNode = nextUsbongNodeIfYes;
+*/
 		        EditText myTextAreaScreenEditText = (EditText)findViewById(R.id.textarea_edittext);
 			        //if it's blank
 	    			if (myTextAreaScreenEditText.getText().toString().trim().equals("")) {
@@ -2806,7 +2801,9 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 					}
     		}
     		else if (currScreen==UsbongConstants.GPS_LOCATION_SCREEN) {
-    			currUsbongNode = nextUsbongNodeIfYes; //= nextIMCIQuestionIfNo will also do
+/*	//removed by Mike, 20170625
+				currUsbongNode = nextUsbongNodeIfYes; //= nextIMCIQuestionIfNo will also do
+*/
 				TextView myLongitudeTextView = (TextView)findViewById(R.id.longitude_textview);
 	            TextView myLatitudeTextView = (TextView)findViewById(R.id.latitude_textview);
 
@@ -2863,7 +2860,9 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
     			}
     		}		    		
     		else if (currScreen==UsbongConstants.DATE_SCREEN) {
-    			currUsbongNode = nextUsbongNodeIfYes;
+/*	//removed by Mike, 20170625
+				currUsbongNode = nextUsbongNodeIfYes;
+*/
     			//added by Mike, 13 Oct. 2015
     			DatePicker myDatePicker = (DatePicker) findViewById(R.id.date_picker);		    			
 	    		UsbongUtils.addElementToContainer(usbongAnswerContainer, "A,"+myDatePicker.getMonth() +
@@ -2887,14 +2886,18 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
     			initParser();				        	
     		}		    		
     		else if (currScreen==UsbongConstants.TIMESTAMP_DISPLAY_SCREEN) {
-    			currUsbongNode = nextUsbongNodeIfYes;
+/*	//removed by Mike, 20170625
+				currUsbongNode = nextUsbongNodeIfYes;
+*/
 	    		UsbongUtils.addElementToContainer(usbongAnswerContainer, timestampString+";", usbongAnswerContainerCounter);
 				usbongAnswerContainerCounter++;
 
     			initParser();				        	
     		}		    				    		
     		else if (currScreen==UsbongConstants.QR_CODE_READER_SCREEN) {
-    			currUsbongNode = nextUsbongNodeIfYes; //= nextIMCIQuestionIfNo will also do
+/*	//removed by Mike, 20170625
+				currUsbongNode = nextUsbongNodeIfYes; //= nextIMCIQuestionIfNo will also do
+*/
 
     			if (!myQRCodeContent.equals("")) {
 //		    				usbongAnswerContainer.addElement("Y,"+myQRCodeContent+";");							
@@ -2909,7 +2912,9 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
     			initParser();				        	
     		}
     		else if ((currScreen==UsbongConstants.DCAT_SUMMARY_SCREEN)) {
-    			currUsbongNode = nextUsbongNodeIfYes; //= nextIMCIQuestionIfNo will also do
+/*	//removed by Mike, 20170625
+				currUsbongNode = nextUsbongNodeIfYes; //= nextIMCIQuestionIfNo will also do
+*/
 /*
 				        LinearLayout myDCATSummaryLinearLayout = (LinearLayout)findViewById(R.id.dcat_summary_linearlayout);
 				        int total = myDCATSummaryLinearLayout.getChildCount();
@@ -2926,7 +2931,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
 				initParser();		    		}
 
     		else { //TODO: do this for now		    		
-    			currUsbongNode = nextUsbongNodeIfYes; //nextUsbongNodeIfNo will also do, since this is "Any"
+				currUsbongNode = nextUsbongNodeIfYes; //nextUsbongNodeIfNo will also do, since this is "Any"
 //						usbongAnswerContainer.addElement("A;");															
 	    		UsbongUtils.addElementToContainer(usbongAnswerContainer, "A;", usbongAnswerContainerCounter);
 				usbongAnswerContainerCounter++;
@@ -3182,7 +3187,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
     private void processReturnToMainMenuActivityYes() {
     	processReturnToTitleScreenActivityYes();
     }
-    
+
     //added by Mike, 20160417
     private void processReturnToTitleScreenActivityYes() {
 		decisionTrackerContainer.removeAllElements();
@@ -3301,7 +3306,7 @@ public class UsbongDecisionTreeEngineActivity extends AppCompatActivity implemen
     		alertString = (String) getResources().getText(R.string.alertStringValueEnglish);
         }
     	
-    	TextView requiredFieldAlertStringTextView = (TextView) UsbongUtils.applyTagsInAlertStringView(UsbongDecisionTreeEngineActivity.getInstance(), new TextView(UsbongDecisionTreeEngineActivity.getInstance()), UsbongUtils.IS_TEXTVIEW, requiredFieldAlertString);
+    	TextView requiredFieldAlertStringTextView = (TextView) UsbongUtils.applyTagsInView(UsbongDecisionTreeEngineActivity.getInstance(), new TextView(UsbongDecisionTreeEngineActivity.getInstance()), UsbongUtils.IS_TEXTVIEW, requiredFieldAlertString);
     	TextView alertStringTextView = (TextView) UsbongUtils.applyTagsInView(UsbongDecisionTreeEngineActivity.getInstance(), new TextView(UsbongDecisionTreeEngineActivity.getInstance()), UsbongUtils.IS_TEXTVIEW, alertString);
     	
     	new AlertDialog.Builder(UsbongDecisionTreeEngineActivity.this).setTitle(alertStringTextView.getText().toString())
